@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    docker.build('my-app-image')
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    docker.image('my-app-image').run('-p 8080:8080')
+                }
+            }
+        }
+    }
+
+    triggers {
+        pollSCM('H/5 * * * *') // Trigger every 5 minutes
+    }
+}
